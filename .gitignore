@@ -39,4 +39,3 @@ build-iPhoneSimulator/
 /.bundle/
 /vendor/bundle
 /lib/bundler/man/
-**/**/docker-compose.yml

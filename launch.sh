@@ -1,7 +1,5 @@
 #!/bin/bash
 
-dotenv ruby compile.rb
-
 ROOT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd $ROOT_PATH
