@@ -6,5 +6,8 @@ cd $ROOT_PATH
 
 # ./launch.sh postgresql
 cd $1
-docker-compose up -d
+
+# https://github.com/localstack/localstack#using-docker-compose
+TMPDIR=/private$TMPDIR docker-compose up -d
+
 cd $ROOT_PATH
