@@ -5,3 +5,5 @@ services:
     image: memcached:1.6
     restart: always
     container_name: memcached
+    ports:
+      - 11211:11211
