@@ -1,0 +1,56 @@
+version: '3.7'
+
+x-minio-common: &minio-common
+  image: quay.io/minio/minio:latest
+  command: server /data --console-address ":9001"
+  expose:
+    - "9000"
+    - "9001"
+  environment:
+    MINIO_ROOT_USER: ${MINIO_ROOT_USER:?err}
+    MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?err}
+    MINIO_SERVER_URL: https://minio-api.dev.valiants.co
+    MINIO_BROWSER_REDIRECT_URL: https://minio.dev.valiants.co
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+    interval: 30s
+    timeout: 20s
+    retries: 3
+
+services:
+  minio:
+    <<: *minio-common
+    hostname: minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - /home/mihado/Services/.data/minio:/data
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+
+      # Minio Console
+      - traefik.http.services.minio-svc.loadbalancer.server.port=9001
+
+      - traefik.http.routers.minio-redirect.entrypoints=web
+      - traefik.http.routers.minio-redirect.rule=Host(`minio.dev.valiants.co`)
+      - traefik.http.routers.minio-redirect.middlewares=traefik-https-redirect
+      - traefik.http.routers.minio-redirect.service=minio-svc
+
+      - traefik.http.routers.minio-svc.entrypoints=websecure
+      - traefik.http.routers.minio-svc.rule=Host(`minio.dev.valiants.co`)
+      - traefik.http.routers.minio-svc.service=minio-svc
+
+      # Minio API
+      - traefik.http.services.minio-api-svc.loadbalancer.server.port=9000
+      - traefik.http.routers.minio-api-svc.entrypoints=websecure
+      - traefik.http.routers.minio-api-svc.rule=Host(`minio-api.dev.valiants.co`)
+      - traefik.http.routers.minio-api-svc.service=minio-api-svc
+
+networks:
+  proxy:
+    external: true
