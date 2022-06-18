@@ -1,0 +1,27 @@
+version: "3.6"
+services:
+  gitlab:
+    image: "gitlab/gitlab-ee:latest"
+    restart: unless-stopped
+    container_name: gitlab
+    hostname: "gitlab.local"
+    env_file:
+      - .env
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "https://gitlab.local"
+
+    ports:
+      - "2222:22"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "$GITLAB_HOME/data:/var/opt/gitlab"
+      # cert & key names must match external_url (for nginx)
+      - ${PWD}/secret/certs/local.crt:/etc/gitlab/ssl/gitlab.local.crt:ro
+      - ${PWD}/secret/certs/local.key:/etc/gitlab/ssl/gitlab.local.key:ro
+      - ${PWD}/config/gitlab.rb:/etc/gitlab/gitlab.rb
+      - "$GITLAB_HOME/config:/etc/gitlab"
+      - "$GITLAB_HOME/logs:/var/log/gitlab"
