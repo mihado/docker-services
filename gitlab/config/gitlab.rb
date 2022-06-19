@@ -980,7 +980,7 @@ gitlab_rails['db_port']     = ENV["GITLAB_DB_PORT"]
 # puma['enable'] = true
 # puma['ha'] = false
 # puma['worker_timeout'] = 60
-# puma['worker_processes'] = 2
+puma['worker_processes'] = 0
 # puma['min_threads'] = 4
 # puma['max_threads'] = 4
 
