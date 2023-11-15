@@ -1,8 +1,8 @@
 version: "3"
 services:
   postgresql:
-    image: postgres:13
-    container_name: postgresql13
+    image: postgres:11.19-alpine
+    container_name: postgresql11
     volumes:
       - "${POSTGRES_DATA}:/var/lib/postgresql/data"
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -10,5 +10,5 @@ services:
       - "POSTGRES_USER=${POSTGRES_USER}"
       - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
     ports:
-      - "5432:5432"
+      - "5435:5432"
     restart: unless-stopped
