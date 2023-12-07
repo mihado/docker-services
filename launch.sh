@@ -8,6 +8,6 @@ cd $ROOT_PATH
 cd $1
 
 # https://github.com/localstack/localstack#using-docker-compose
-TMPDIR=/private$TMPDIR docker-compose up -d
+TMPDIR=/private$TMPDIR docker compose up -d
 
 cd $ROOT_PATH
